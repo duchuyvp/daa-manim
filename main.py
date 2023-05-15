@@ -177,7 +177,7 @@ for q in range(1, Q+1):
 
         pi_teacher = (
             SVGMobject("PiCreature/PiCreatures_teacher.svg")
-            .scale(0.65)
+            .scale(0.75)
             .to_edge(DOWN)
             .shift(LEFT * 2)
         )
@@ -186,18 +186,19 @@ for q in range(1, Q+1):
             .scale(0.75)
             .next_to(pi_teacher, UP + RIGHT, buff=0)
         )
-        text = Text("O(nq) time?").scale(0.35).move_to(bubble_speech).shift(UP * 0.2)
-        chat = VGroup(pi_teacher, bubble_speech, text)
+        text = text_chat_speech("O(nq) time?", bubble_speech).scale(0.35)
+        pi_teacher_chat = VGroup(bubble_speech, text)
 
         self.play(FadeIn(pi_teacher))
-        self.play(Write(bubble_speech), Write(text))
+        self.play(Write(pi_teacher_chat))
         self.wait(1)
 
         self.play(
             FadeOut(ranges),
             FadeOut(for_code),
             FadeOut(arr_vgroup),
-            FadeOut(chat),
+            FadeOut(pi_teacher),
+            FadeOut(pi_teacher_chat),
         )
         self.wait(1)
 
@@ -321,9 +322,40 @@ for q in range(1, Q+1):
             ],
             *[
                 Transform(VGroup(*[formula[i] for i in l]), formula__[j])
-                for l, j in zip([[5, 6, 7], [9, 10, 11]], [7, 5])
+                for l, j in zip([[5, 6, 7], [9, 10, 11]], [5, 7])
             ],
         )
         self.wait(1)
 
+        self.play(FadeOut(formula))
+
+
+        pi_student = SVGMobject("PiCreature/PiCreatures_happy.svg").to_corner(DOWN+LEFT)
+
+        bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg").next_to(pi_student, UP + RIGHT, buff=0)
+        text = Text("Query in O(1) time").scale(0.35).move_to(bubble_speech).shift(UP * 0.2)
+        pi_student_chat = VGroup(bubble_speech, text)
+
+        self.play(FadeIn(pi_student))
+        self.play(Write(pi_student_chat))
+
+
+        pi_student_confuse = SVGMobject("PiCreature/PiCreatures_confused.svg").to_edge(DOWN).shift(RIGHT * 2).move_to(pi_student)
+        self.play(Transform(pi_student, pi_student_confuse), FadeOut(text))
+        self.wait(1)
+
+        text = text_chat_speech("How about \"prefix sum\" \n for min query?", bubble_speech).scale(0.8)
+        self.play(Write(text))
+        self.wait(1)
+
+        self.play(
+            FadeOut(pi_student_chat),
+            FadeOut(pi_student),
+            FadeOut(prefix_arr_v),
+        )
+
         # self.add(NumberPlane(x_range=(-8, 8, 1), y_range=(-5, 5, 1), fill_opacity=0.1).scale(SCALE))
+
+
+def text_chat_speech(text, bubble_speech) -> Text:
+    return Text(text).move_to(bubble_speech).shift(UP * 0.25)
