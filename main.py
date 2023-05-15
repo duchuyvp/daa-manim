@@ -1,14 +1,6 @@
 from manim import *
 
-
-def create_textbox(color, string):
-    result = VGroup()  # create a VGroup
-    box = Rectangle(  # create a box
-        height=2, width=3, fill_color=color, fill_opacity=0.5, stroke_color=color
-    )
-    text = Text(string).move_to(box.get_center())  # create text
-    result.add(box, text)  # add both objects to the VGroup
-    return result
+SCALE = 0.7
 
 
 class Main(Scene):
@@ -40,22 +32,23 @@ class Main(Scene):
         )
 
         arr_vgroup = (
-            VGroup(arr_v, index_v).arrange(DOWN, buff=0.5).to_edge(UP).scale(0.75)
+            VGroup(arr_v, index_v).arrange(DOWN, buff=0.5).to_edge(UP).scale(SCALE)
         )
-
+        arr_vgroup.to_edge(UP)
         self.play(Write(arr_vgroup))
-        self.wait(1)
-
-        self.play(arr_vgroup.animate.to_edge(UP))
         self.wait(1)
 
         l = 3
         r = 6
 
         query = VGroup(
-            MathTex("sum_q(l,r) =", "\\sum_{i=l}^{r} a_i").move_to(ORIGIN + 1.5 * UP),
-            MathTex("min_q(l,r) =", "\\min_{i=l}^{r} a_i").move_to(ORIGIN),
-            MathTex("max_q(l,r) =", "\\max_{i=l}^{r} a_i").move_to(ORIGIN + 1.5 * DOWN),
+            MathTex("\\texttt{sum}_q(l,r) =", "\\sum_{i=l}^{r} a_i").move_to(
+                ORIGIN + 1.5 * UP
+            ),
+            MathTex("\\texttt{min}_q(l,r) =", "\\min_{i=l}^{r} a_i").move_to(ORIGIN),
+            MathTex("\\texttt{max}_q(l,r) =", "\\max_{i=l}^{r} a_i").move_to(
+                ORIGIN + 1.5 * DOWN
+            ),
         )
         result = VGroup(
             MathTex("= " + str(sum(arr[l : r + 1])))
@@ -76,7 +69,7 @@ class Main(Scene):
             )
             .to_edge(LEFT)
             .shift(DOWN)
-        ).scale(0.75)
+        ).scale(SCALE)
 
         self.play(Write(query[0]), Write(query[1]), Write(query[2]))
         self.wait(1)
@@ -86,7 +79,7 @@ class Main(Scene):
             .set_color(GREEN)
             .next_to(queries, UP)
             .align_to(queries, LEFT)
-            .scale(0.75)
+            .scale(SCALE)
         )
 
         self.play(
@@ -100,15 +93,36 @@ class Main(Scene):
 
         self.play(Write(result[0]), Write(result[1]), Write(result[2]))
         self.wait(1)
+        code_str = """
 
-        for_code = create_textbox(BLUE, "Code").scale(0.75).to_edge(RIGHT)
+    s = 0
+    for i in range(l, r+1):
+        s += a[i]
+    print(s)
+
+"""
+        for_code = (
+            Code(
+                code=code_str,
+                tab_width=4,
+                background="window",
+                language="C++",
+                font="FiraCode Nerd Font",
+                line_spacing=0.35,
+                insert_line_no=False,
+            )
+            .to_edge(RIGHT, buff=1)
+            .shift(UP * 0.5)
+            .scale(SCALE)
+        )
 
         self.play(
             FadeOut(queries[1]),
             FadeOut(queries[2]),
-            Create(for_code),
         )
         self.wait(1)
+
+        self.play(Write(for_code))
 
         self.play(
             FadeOut(queries[0]),
@@ -128,20 +142,62 @@ class Main(Scene):
             .set_color(GREEN)
             .arrange(DOWN, buff=1)
             .to_edge(LEFT)
-            .scale(0.75)
+            .scale(SCALE)
         )
 
-        self.play(Write(ranges[0]))
-        self.play(Write(ranges[1]))
-        self.play(Write(ranges[2]))
-        self.play(Write(ranges[3]))
-        self.play(Write(ranges[4]))
+        for i in range(len(ranges)):
+            self.play(Write(ranges[i]))
+        self.wait(1)
+
+        code_str = """
+for q in range(1, Q+1):
+    s = 0
+    for i in range(l_q, r_q+1):
+        s += a[i]
+    print(s)
+
+"""
+        self.play(
+            Transform(
+                for_code,
+                Code(
+                    code=code_str,
+                    tab_width=4,
+                    background="window",
+                    language="C++",
+                    font="FiraCode Nerd Font",
+                    line_spacing=0.35,
+                    insert_line_no=False,
+                )
+                .to_edge(RIGHT, buff=1)
+                .shift(UP * 0.5)
+                .scale(SCALE),
+            )
+        )
+
+        pi_teacher = (
+            SVGMobject("PiCreature/PiCreatures_teacher.svg")
+            .scale(0.65)
+            .to_edge(DOWN)
+            .shift(LEFT * 2)
+        )
+        bubble_speech = (
+            SVGMobject("PiCreature/Bubbles_speech.svg")
+            .scale(0.75)
+            .next_to(pi_teacher, UP + RIGHT, buff=0)
+        )
+        text = Text("O(nq) time?").scale(0.35).move_to(bubble_speech).shift(UP * 0.2)
+        chat = VGroup(pi_teacher, bubble_speech, text)
+
+        self.play(FadeIn(pi_teacher))
+        self.play(Write(bubble_speech), Write(text))
         self.wait(1)
 
         self.play(
             FadeOut(ranges),
             FadeOut(for_code),
             FadeOut(arr_vgroup),
+            FadeOut(chat),
         )
         self.wait(1)
 
@@ -171,7 +227,8 @@ class Main(Scene):
                 ]
             )
             .arrange(RIGHT, buff=0)
-            .scale(0.75)
+            .next_to(arr_vgroup, DOWN)
+            .scale(SCALE)
         )
 
         self.play(Write(VGroup(*[prefix_arr_v[i][0] for i in range(len(prefix_arr))])))
@@ -187,4 +244,86 @@ class Main(Scene):
             )
         self.wait(1)
 
-        self.add(NumberPlane(x_range=(-8, 8, 1), y_range=(-5, 5, 1)).scale(0.75))
+        formula = MathTex(
+            "\\texttt{sum}_q(",  # 0
+            "l",  # 1
+            ",",  # 2
+            "r",  # 3
+            ") = ",
+            "\\texttt{sum}_q(0,",  # 4
+            "r",  # 5
+            ") ",
+            "- ",
+            "\\texttt{sum}_q(0,",
+            "l-1",  # 6
+            ")",  # 7
+        )
+        formula_ = MathTex(
+            "\\texttt{sum}_q(",  # 0
+            str(l),  # 1
+            ",",  # 2
+            str(r),  # 3
+            ") = ",  # 4
+            "\\texttt{sum}_q(0,",  # 5
+            str(r),  # 6
+            ") ",
+            "- ",  # 7
+            "\\texttt{sum}_q(0,",  # 8
+            str(l - 1),  # 9
+            ")",  # 10
+        )
+        formula__ = MathTex(
+            "\\texttt{sum}_q(",  # 0
+            str(l),  # 1
+            ",",  # 2
+            str(r),  # 3
+            ") = ",  # 4
+            str(prefix_arr[r]),
+            "- ",  # 7
+            str(prefix_arr[l - 1]),  # 10
+        )
+
+        self.play(Write(formula))
+        # self.play(Write(formula_))
+        # self.play(Write(formula__))
+        self.wait(1)
+
+        # indices = index_labels(formula)
+        # self.add(indices)
+        # indices = index_labels(formula_)
+        # self.add(indices)
+        # indices = index_labels(formula__)
+        # self.add(indices)
+
+        self.play(
+            # ReplacementTransform(formula, formula_),
+            *[
+                Transform(formula[i], formula_[i])
+                for i in range(len(formula))
+            ],
+            *[
+                arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4)
+                for i in range(l, r + 1)
+            ],
+        )
+        self.wait(1)
+
+        self.play(
+            prefix_arr_v[l - 1][0].animate.set_fill(YELLOW, opacity=0.4),
+            prefix_arr_v[r][0].animate.set_fill(YELLOW, opacity=0.4),
+        )
+        self.wait(1)
+
+        self.play(
+            *[
+                Transform(formula[i], formula__[j])
+                for i, j in zip([0,1,2,3,4,8], [0,1,2,3,4,6])
+            ],
+            *[
+                Transform(VGroup(*[formula[i] for i in l]), formula__[j])
+                for l, j in zip([[5, 6, 7], [9, 10, 11]], [7, 5])
+            ],
+        )
+        self.wait(1)
+
+        # self.add(NumberPlane(x_range=(-8, 8, 1), y_range=(-5, 5, 1), fill_opacity=0.1).scale(SCALE))
