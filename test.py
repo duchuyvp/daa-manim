@@ -1,9 +1,6 @@
 from manim import *
 
 
-class CodeFromString(Scene):
+class AnimatingMethods(Scene):
     def construct(self):
-        bubble = SVGMobject("PiCreature/Bubbles_speech.svg")
-        self.add(bubble)
-        dot = Dot().shift(UP*0.25)
-        self.add(dot)
+        self.play(Create(Rectangle(color=RED, fill_opacity=0.5)))
