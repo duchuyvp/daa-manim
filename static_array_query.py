@@ -13,7 +13,8 @@ class Main(Scene):
         self.play(FadeOut(text))
         self.wait()
 
-        arr = [1, 3, 8, 4, 6, 1, 3, 4]
+        # region array
+        arr = [1, 3, 4, 8, 6, 1, 4, 2]
         arr_v = VGroup(
             *[
                 VGroup(
@@ -30,7 +31,9 @@ class Main(Scene):
                 for i in range(len(arr))
             ]
         )
+        # endregion array
 
+        # region intro
         arr_vgroup = (
             VGroup(arr_v, index_v).arrange(DOWN, buff=0.5).scale(SCALE).to_edge(UP)
         )
@@ -211,6 +214,9 @@ for q in range(1, Q+1):
         self.play(FadeIn(arr_vgroup))
         self.wait()
 
+        # endregion
+
+        # region sum query
         prefix_arr = arr.copy()
         for i in range(1, len(prefix_arr)):
             prefix_arr[i] += prefix_arr[i - 1]
@@ -333,6 +339,8 @@ for q in range(1, Q+1):
             FadeOut(teacher_speech_bubble),
             FadeOut(arr_vgroup),
             FadeOut(prefix_arr_v),
+            prefix_arr_v[l - 1][0].animate.set_fill(YELLOW, opacity=0),
+            prefix_arr_v[r][0].animate.set_fill(YELLOW, opacity=0),
             FadeOut(index_v),
         )
 
@@ -442,11 +450,14 @@ for q in range(1, Q+1):
             FadeOut(grid_2d_arr),
             FadeOut(label_2d_arr),
             FadeOut(query_rect),
-            FadeOut(rec_label),
+            FadeOut(rec_label[0]),
             FadeOut(formula_2d),
             FadeOut(pi_teacher),
         )
 
+        # endregion sum query
+
+        # region min query
         pi_student = (
             VGroup(
                 SVGMobject("PiCreature/PiCreatures_plain.svg"),
@@ -477,7 +488,198 @@ for q in range(1, Q+1):
         self.play(FadeOut(student_ask_bubble), FadeOut(pi_student))
         self.wait()
 
+        for i in range(l, r + 1):
+            arr_v[i][0].set_fill(YELLOW, opacity=0)
+        prefix_arr_v[l - 1][0].animate.set_fill(YELLOW, opacity=0)
+        prefix_arr_v[r][0].animate.set_fill(YELLOW, opacity=0)
+
         self.play(FadeIn(arr_vgroup))
+
+        d = {}
+        for i in range(len(arr)):
+            d[(i, i)] = arr[i]
+        w = 2
+        while w <= len(arr):
+            for i in range(len(arr) - w + 1):
+                d[(i, i + w - 1)] = min(
+                    d[(i, i + w / 2 - 1)], d[(i + w / 2, i + w - 1)]
+                )
+            w *= 2
+
+        sparse_table = VGroup()
+        w = 1
+        while w < len(arr):
+            temp = MathTable(
+                [
+                    ["l", "r", "\\texttt{min}_q(l,r)"],
+                    *[
+                        [str(i), str(i + w - 1), str(d[(i, i + w - 1)])]
+                        for i in range(len(arr) - w + 1)
+                    ],
+                ],
+                line_config={"stroke_width": 1, "color": YELLOW},
+            )
+            temp.remove(*temp.get_vertical_lines())
+            sparse_table.add(temp.copy())
+            w *= 2
+
+        sparse_table.arrange(RIGHT, buff=1).scale(0.5).move_to(ORIGIN)
+        for table in sparse_table:
+            table.align_to(arr_vgroup, UP).shift(DOWN * (0.3 + arr_vgroup.get_height()))
+
+        self.play(FadeIn(sparse_table))
+        self.wait()
+
+        self.play(Circumscribe(sparse_table[2].get_rows()[2], color=RED, buff=0.2))
+        self.wait()
+
+        self.play(
+            Circumscribe(sparse_table[1].get_rows()[2], color=RED, buff=0.2),
+            Circumscribe(sparse_table[1].get_rows()[4], color=RED, buff=0.2),
+        )
+        self.wait()
+
+        l_m = 1
+        r_m = 6
+        k = r_m - l_m + 1
+        while k & (k - 1) != 0:
+            k -= k & ~(k - 1)
+
+        formular_min = (
+            MathTex(
+                "\\texttt{min}_q(",
+                "l",
+                ",",
+                "r",
+                ") = ",
+                "\\min(",
+                "\\texttt{min}_q(",
+                "l",
+                ",",
+                "l+k-1",
+                ")",
+                ", ",
+                "\\texttt{min}_q(",
+                "r-k+1",
+                ",",
+                "r",
+                ")",
+                ")",
+            )
+            .scale(SCALE)
+            .to_edge(DOWN, buff=0.5)
+        )
+
+        formular_min_ = (
+            MathTex(
+                "\\texttt{min}_q(",
+                str(l_m),
+                ",",
+                str(r_m),
+                ") = ",
+                "\\min(",
+                "\\texttt{min}_q(",
+                str(l_m),
+                ",",
+                str(l_m + k - 1),
+                ")",
+                ", ",
+                "\\texttt{min}_q(",
+                str(r_m - k + 1),
+                ",",
+                str(r),
+                ")",
+                ")",
+            )
+            .scale(SCALE)
+            .to_edge(DOWN, buff=0.5)
+        )
+        formular_min__ = (
+            MathTex(
+                "\\texttt{min}_q(",
+                str(l_m),
+                ",",
+                str(r_m),
+                ") = ",
+                "\\min(",
+                str(d[(l_m, l_m + k - 1)]),
+                ", ",
+                str(d[(r_m - k + 1, r_m)]),
+                ")",
+            )
+            .scale(SCALE)
+            .to_edge(DOWN, buff=0.5)
+        )
+
+        self.play(Write(formular_min))
+        self.wait()
+
+        formular_min_l_rect = SurroundingRectangle(
+            sparse_table[2].get_rows()[2], color=RED, buff=0.2
+        )
+        formular_min_r_rect = SurroundingRectangle(
+            sparse_table[2].get_rows()[4], color=RED, buff=0.2
+        )
+
+        self.play(
+            *[
+                Transform(formular_min[i], formular_min_[i])
+                for i in range(len(formular_min))
+            ],
+            *[
+                arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4)
+                for i in range(l_m, r_m + 1)
+            ],
+            Create(formular_min_l_rect),
+            Create(formular_min_r_rect),
+        )
+        self.wait()
+
+        self.play(
+            *[
+                Transform(formular_min[i], formular_min__[j])
+                for i, j in zip([0, 1, 2, 3, 4, 5, 11, 17], [0, 1, 2, 3, 4, 5, 7, 9])
+            ],
+            *[
+                Transform(VGroup(*[formular_min[i] for i in l]), formular_min__[j])
+                for l, j in zip([[6, 7, 8, 9, 10], [12, 13, 14, 15, 16]], [6, 8])
+            ],
+        )
+        self.wait()
+
+        self.play(
+            FadeOut(formular_min_l_rect),
+            FadeOut(formular_min_r_rect),
+            *[
+                arr_v[i][0].animate.set_fill(YELLOW, opacity=0)
+                for i in range(l_m, r_m + 1)
+            ],
+            FadeOut(formular_min),
+            FadeOut(sparse_table),
+        )
+        self.wait()
+        # endregion
+
+        # region Binary indexed tree
+
+        pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_corner(
+            DOWN + LEFT
+        )
+        pi_bubble_ask = text_bubble_speech("What if we update \n an element?").next_to(
+            pi_teacher, UP + RIGHT, buff=0
+        )
+
+        self.play(FadeIn(pi_teacher), Write(pi_bubble_ask))
+        self.play(FadeIn(prefix_arr_v))
+
+        u = 3
+
+        self.wait()
+
+        self.play(arr_v[u][0].animate.set_fill(YELLOW, opacity=0.4))
+        self.play(*[prefix_arr_v[i][0].animate.set_fill(RED, opacity=0.4) for i in range(u, len(prefix_arr_v))])
+        self.wait()
+        # endregion
 
         # self.add(NumberPlane(x_range=(-8, 8, 1), y_range=(-5, 5, 1), fill_opacity=0.1).scale(SCALE))
 

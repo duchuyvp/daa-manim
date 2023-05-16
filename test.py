@@ -3,5 +3,8 @@ from manim import *
 
 class AnimatingMethods(Scene):
     def construct(self):
-        bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg")
-        self.add(bubble_speech)
+        text = Text("Hello World").shift(UP)
+        self.play(Write(text))
+        self.wait()
+
+        self.play(text.animate.set_text("Hello Manim"))
