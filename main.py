@@ -283,16 +283,7 @@ for q in range(1, Q+1):
         )
 
         self.play(Write(formula))
-        # self.play(Write(formula_))
-        # self.play(Write(formula__))
         self.wait()
-
-        # indices = index_labels(formula)
-        # self.add(indices)
-        # indices = index_labels(formula_)
-        # self.add(indices)
-        # indices = index_labels(formula__)
-        # self.add(indices)
 
         self.play(
             # ReplacementTransform(formula, formula_),
@@ -444,43 +435,49 @@ for q in range(1, Q+1):
         self.play(Indicate(formula_2d[1]), FadeOut(rec_label[1]), FadeOut(rec_label[3]))
         self.play(Indicate(formula_2d[2]), FadeIn(rec_label[3]))
         self.play(Indicate(formula_2d[3]), FadeOut(rec_label[3]), FadeOut(rec_label[2]))
-
         self.wait()
 
-        # self.play(Write(label_2d_arr[0]), Write(rec_label[0]))
+        self.play(
+            FadeOut(pi_teacher_speak),
+            FadeOut(grid_2d_arr),
+            FadeOut(label_2d_arr),
+            FadeOut(query_rect),
+            FadeOut(rec_label),
+            FadeOut(formula_2d),
+            FadeOut(pi_teacher),
+        )
 
-        # pi_student_confuse = (
-        #     SVGMobject("PiCreature/PiCreatures_confused.svg")
-        #     .to_edge(DOWN)
-        #     .shift(RIGHT * 2)
-        #     .move_to(pi_student)
-        # )
-        # self.play(Transform(pi_student, pi_student_confuse), FadeOut(pi_student_speech))
-        # self.wait()
+        pi_student = (
+            VGroup(
+                SVGMobject("PiCreature/PiCreatures_plain.svg"),
+                SVGMobject("PiCreature/PiCreatures_plain.svg"),
+                SVGMobject("PiCreature/PiCreatures_plain.svg"),
+            )
+            .arrange(RIGHT)
+            .to_corner(DOWN + LEFT)
+        )
 
-        # pi_student_ask = (
-        #     text_bubble_speech(' "prefix sum" \n for min query?')
-        #     .scale(0.75)
-        #     .next_to(pi_student, UP + RIGHT, buff=0)
-        # )
-        # self.play(
-        #     Write(pi_student_ask),
-        #     *[arr_v[i][0].animate.set_fill(YELLOW, opacity=0) for i in range(l, r + 1)],
-        #     prefix_arr_v[l - 1][0].animate.set_fill(YELLOW, opacity=0.4),
-        #     prefix_arr_v[r][0].animate.set_fill(YELLOW, opacity=0.4),
-        # )
-        # self.wait()
+        pi_student_confuse = (
+            VGroup(
+                SVGMobject("PiCreature/PiCreatures_confused.svg"),
+                SVGMobject("PiCreature/PiCreatures_confused.svg"),
+                SVGMobject("PiCreature/PiCreatures_confused.svg"),
+            )
+            .arrange(RIGHT)
+            .to_corner(DOWN + LEFT)
+        )
 
-        # self.play(
-        #     FadeOut(prefix_arr_v),
-        # )
-        # self.wait()
+        student_ask_bubble = text_bubble_speech(
+            ' "prefix sum" \n for min query?'
+        ).next_to(pi_student_confuse, UP + RIGHT, buff=0)
 
-        # self.play(
-        #     FadeOut(text),
-        #     FadeOut(pi_student),
-        #     FadeOut(prefix_arr_v),
-        # )
+        self.play(Transform(pi_student, pi_student_confuse), Write(student_ask_bubble))
+        self.wait()
+
+        self.play(FadeOut(student_ask_bubble), FadeOut(pi_student))
+        self.wait()
+
+        self.play(FadeIn(arr_vgroup))
 
         # self.add(NumberPlane(x_range=(-8, 8, 1), y_range=(-5, 5, 1), fill_opacity=0.1).scale(SCALE))
 
@@ -496,22 +493,12 @@ def text_bubble_speech(text) -> VGroup:
     return VGroup(bubble_speech, text)
 
 
-class Grid2D(VGroup):
-    def __init__(self, x_range, y_range, x_length=None, y_length=None, **kwargs):
-        super().__init__(**kwargs)
-        if x_length is None:
-            x_length = x_range[1] - x_range[0]
-
-        if y_length is None:
-            y_length = y_range[1] - y_range[0]
-        x_group = VGroup()
-        for i in range(x_range[0], x_range[1] + x_range[2], x_range[2]):
-            x_group.add(Line(RIGHT * i + UP * y_range[0], RIGHT * i + UP * y_range[1]))
-            x_group.add(Line(RIGHT * i + UP * y_range[1], RIGHT * i + UP * y_range[1]))
-        x_group.scale(x_length / (x_range[1] - x_range[0]))
-        y_group = VGroup()
-        for i in range(y_range[0], y_range[1] + y_range[2], y_range[2]):
-            y_group.add(Line(UP * i + RIGHT * x_range[0], UP * i + RIGHT * x_range[1]))
-            y_group.add(Line(UP * i + RIGHT * x_range[1], UP * i + RIGHT * x_range[1]))
-        y_group.scale(y_length / (y_range[1] - y_range[0]))
-        self.add(x_group, y_group)
+def text_bubble_ask(text) -> VGroup:
+    bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg").flip(UP)
+    text = (
+        Paragraph(text, alignment="center")
+        .move_to(bubble_speech)
+        .shift(UP * 0.25)
+        .scale(0.35)
+    )
+    return VGroup(bubble_speech, text)
