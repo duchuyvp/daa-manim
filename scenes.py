@@ -1,37 +1,30 @@
 from manim import *
+from manim.mobject.text.text_mobject import remove_invisible_chars
 
 
-class CodeTrackingAnimation(Scene):
+class SurroundingCodeLine(Scene):
     def construct(self):
-        code_str = """
-        #include<iostream>
-        using namespace std;
-        int main(){
-            int sum = 0;
-            for(int i=0;i<n;i++){
-                sum += i;
-            }
-            return 0;
-        }"""
-        code = Code(code=code_str, language="C++", background="window", line_spacing=1)
-        # code.code = remove_invisible_chars(code.code)  # <---- HERE
-        self.add(code)
-        # build sliding windows (SurroundingRectangle)
-        self.sliding_wins = VGroup()
-        height = code.code[0].height
-        for line in code.code:
-            self.sliding_wins.add(
-                SurroundingRectangle(line)
-                .set_fill(YELLOW)
-                .set_opacity(0)
-                .stretch_to_fit_width(code.background_mobject.get_width())
-                .align_to(code.background_mobject, LEFT)
-            )
+        code = """from manim import Scene, Square
 
-        self.add(self.sliding_wins)
-        for i in range(len(code.code) - 1):
-            self.play(self.sliding_wins[i].animate.set_opacity(0.3))
-            self.play(
-                ReplacementTransform(self.sliding_wins[i], self.sliding_wins[i + 1])
-            )
-            self.play(self.sliding_wins[i + 1].animate.set_opacity(0.3))
+class FadeInSquare(Scene):
+    def construct(self):
+        s = Square()
+        self.play(FadeIn(s))
+        self.play(s.animate.scale(2))
+        self.wait()
+"""
+        code = Code(
+            code=code,
+            tab_width=4,
+            background="window",
+            language="C++",
+            font="FiraCode Nerd Font",
+            line_spacing=0.35,
+        )
+        self.play(Write(code))
+
+        code_label = index_labels(code.code, color=BLUE)
+        self.add(code_label)
+
+        number_label = index_labels(code[1], color=RED)
+        self.add(number_label)

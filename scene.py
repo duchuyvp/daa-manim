@@ -1,7 +1,8 @@
 from manim import *
+from manim.mobject.text.text_mobject import remove_invisible_chars
 
 
-class CodeFromString(Scene):
+class SurroundingCodeLine(Scene):
     def construct(self):
         code = """from manim import Scene, Square
 
@@ -12,33 +13,41 @@ class FadeInSquare(Scene):
         self.play(s.animate.scale(2))
         self.wait()
 """
-        rendered_code = Code(
+        code = Code(
             code=code,
             tab_width=4,
             background="window",
-            language="Python",
-            font="Monospace",
-            line_spacing=0.25,
+            language="C++",
+            font="FiraCode Nerd Font",
+            line_spacing=0.35,
+            insert_line_no=False,
         )
-        self.play(Write(rendered_code))
+        # code.code = remove_invisible_chars(code.code)
+        self.play(Write(code))
 
-        line_num = rendered_code.line_numbers
+        h = code.code[0].height + 0.05
+        w = code.background_mobject.width
 
-        h = line_num[0].height
-        w = rendered_code.background_mobject.width
+        a = index_labels(code.code)
+        self.add(a)
 
-        debug_line = VGroup(
-            *[
-                SurroundingRectangle(line)
-                .set_fill(YELLOW)
-                .set_opacity(0.3)
-                .stretch_to_fit_width(w)
-                .align_to(rendered_code.background_mobject, LEFT)
-                for line in rendered_code.code
-            ]
-        )
+        for line in [0, 2, 3, 4, 5, 6, 7]:
+            # surround_line = (
+            #     Rectangle(width=w, height=h, fill_opacity=0.3, stroke_width=0)
+            #     .move_to(code.code[line])
+            #     .align_to(code, LEFT)
+            # )
+            self.add(highlight_line_code(code, line))
+            self.wait()
 
-        self.play(Write(debug_line[0]))
-        for i in range(len(rendered_code.code) - 1):
-            self.play(ReplacementTransform(debug_line[i], debug_line[i + 1]))
-        self.wait()
+
+def highlight_line_code(code: Code, line) -> Rectangle:
+    code.code = remove_invisible_chars(code.code)
+    h = code.code[0].height + 0.05
+    w = code.background_mobject.width
+    surround_line = (
+        Rectangle(width=w, height=h, fill_opacity=0.3, stroke_width=0, color=YELLOW_D)
+        .move_to(code.code[line])
+        .align_to(code, LEFT)
+    )
+    return surround_line
