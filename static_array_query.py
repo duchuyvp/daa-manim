@@ -644,6 +644,7 @@ for q in range(1, Q+1):
                 Transform(VGroup(*[formular_min[i] for i in l]), formular_min__[j])
                 for l, j in zip([[6, 7, 8, 9, 10], [12, 13, 14, 15, 16]], [6, 8])
             ],
+
         )
         self.wait()
 
@@ -694,7 +695,7 @@ for q in range(1, Q+1):
             FadeOut(pi_teacher),
             FadeOut(pi_bubble_ask),
             FadeOut(prefix_arr_v),
-            FadeOut(arr_v),
+            FadeOut(arr_vgroup),
         )
         # endregion
 

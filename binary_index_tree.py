@@ -3,7 +3,7 @@ from manim import *
 SCALE = 0.7
 
 
-class BinaryIndexedTree(Scene):
+class BinaryIndexedTree(MovingCameraScene):
     def construct(self):
         arr = [0, 1, 3, 4, 8, 6, 1, 4, 2]
         prefix_arr = arr.copy()
@@ -54,13 +54,27 @@ class BinaryIndexedTree(Scene):
                 for i in range(1, len(arr))
             ]
         )
-
         bit_vgroup = (
             VGroup(bit_v, index_bit_v)
             .arrange(LEFT, buff=0.5)
             .scale(SCALE)
             .next_to(arr_vgroup, DOWN)
-            .to_edge(LEFT)
+            .to_edge(LEFT, buff=1.5)
         )
-        self.play(Create(bit_vgroup))
+
+        bit_label = Tex("tree").scale(SCALE).next_to(bit_v, UP)
+        self.play(Write(bit_label))
+
+        self.play(
+            *[Create(bit_v[i][0]) for i in range(len(bit_v))], Create(index_bit_v)
+        )
         self.wait()
+
+        self.camera.frame.save_state()
+        self.play(self.camera.frame.animate.set(width=8))
+        self.wait()
+
+        # self.play(Restore(self.camera.frame))
+        # formula_tree = MathTex("tree[k] = \\sum_{i=k-p(k) + 1}^{k} a_i")
+        # self.play(Write(formula_tree))
+        # self.wait()
