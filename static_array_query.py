@@ -3,7 +3,7 @@ from manim import *
 SCALE = 0.7
 
 
-class Main(Scene):
+class StaticArray(Scene):
     def construct(self):
         text = Text("Range queries").scale(1.5)
 
@@ -677,8 +677,25 @@ for q in range(1, Q+1):
         self.wait()
 
         self.play(arr_v[u][0].animate.set_fill(YELLOW, opacity=0.4))
-        self.play(*[prefix_arr_v[i][0].animate.set_fill(RED, opacity=0.4) for i in range(u, len(prefix_arr_v))])
+        self.play(
+            *[
+                prefix_arr_v[i][0].animate.set_fill(RED, opacity=0.4)
+                for i in range(u, len(prefix_arr_v))
+            ]
+        )
         self.wait()
+
+        self.play(
+            arr_v[u][0].animate.set_fill(YELLOW, opacity=0),
+            *[
+                prefix_arr_v[i][0].animate.set_fill(RED, opacity=0)
+                for i in range(u, len(prefix_arr_v))
+            ],
+            FadeOut(pi_teacher),
+            FadeOut(pi_bubble_ask),
+            FadeOut(prefix_arr_v),
+            FadeOut(arr_v),
+        )
         # endregion
 
         # self.add(NumberPlane(x_range=(-8, 8, 1), y_range=(-5, 5, 1), fill_opacity=0.1).scale(SCALE))
