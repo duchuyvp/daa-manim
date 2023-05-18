@@ -285,12 +285,12 @@ class BinaryIndexedTree(MovingCameraScene):
         line_debug = highlight_line_code(sum_code, 7)
 
         self.play(Create(line_debug))
+        self.play(Write(watch[2], run_time=0.2))
         self.wait()
 
         k = 7
         s = 0
 
-        self.play(Write(watch[2], run_time=0.2))
         self.play(
             Transform(line_debug, highlight_line_code(sum_code, 1)),
             Write(watch[0], run_time=0.2),
@@ -353,6 +353,12 @@ class BinaryIndexedTree(MovingCameraScene):
         )
         self.wait()
 
+        self.play(
+            arr_v[u - 1][0].animate.set_fill(YELLOW, opacity=0),
+            *[bit_v[i][0].animate.set_fill(YELLOW, opacity=0) for i in [2, 3, 7]],
+            *[value_v[i].animate.set_fill(GOLD, opacity=0.3) for i in [2, 3, 7]],
+        )
+
         add_func = """
         def add(k, x):
             a[k] += x
@@ -377,6 +383,9 @@ class BinaryIndexedTree(MovingCameraScene):
             .to_edge(RIGHT, buff=1.5)
             .shift(DOWN)
         )
+
+        k = 5
+        x = 1
 
         watch = (
             VGroup(
@@ -408,9 +417,103 @@ class BinaryIndexedTree(MovingCameraScene):
         line_debug = highlight_line_code(add_code, 7)
 
         self.play(Create(line_debug))
+        self.play(Write(watch[2], run_time=0.2))
         self.wait()
 
-        self.play(Write(watch[2], run_time=0.2))
+        self.play(
+            Transform(line_debug, highlight_line_code(add_code, 1)),
+            Write(watch[0], run_time=0.2),
+            Write(watch[1], run_time=0.2),
+        )
+        self.wait(0.5)
+
+        arr[k] += x
+        self.play(
+            Transform(line_debug, highlight_line_code(add_code, 2)),
+            Transform(
+                arr_v[k - 1][1],
+                Text(str(arr[k]), color=PINK).scale(SCALE).move_to(arr_v[k - 1][1]),
+                run_time=0.2,
+            ),
+        )
+        self.wait(0.5)
+
+        while k <= 8:
+            self.play(Transform(line_debug, highlight_line_code(add_code, 3)))
+            self.wait(0.5)
+            bit[k] += x
+
+            self.play(
+                Transform(line_debug, highlight_line_code(add_code, 4)),
+                Transform(
+                    bit_v[k - 1][1],
+                    Text(str(bit[k]), color=PINK).scale(SCALE).move_to(bit_v[k - 1][1]),
+                    run_time=0.2,
+                ),
+                Indicate(value_v[k - 1]),
+            )
+            self.wait(0.5)
+
+            k += k & ~(k - 1)
+            self.play(
+                Transform(line_debug, highlight_line_code(add_code, 2)),
+                Transform(
+                    watch[0][1],
+                    Text(str(k) + "  ", font="FiraCode Nerd Font", color=PINK)
+                    .scale(0.5)
+                    .move_to(watch[0][1]),
+                    run_time=0.2,
+                ),
+            )
+            self.wait(0.5)
+
+        self.wait()
+
+        self.play(
+            FadeOut(line_debug),
+            FadeOut(watch),
+            *[FadeOut(i) for i in [add_code, arr_vgroup, bit_vgroup, value_v]],
+        )
+
+        pi_student = (
+            SVGMobject("PiCreature/PiCreatures_hesitant.svg")
+            .to_corner(DOWN + RIGHT)
+            .shift(LEFT)
+        )
+        pi_teacher = (
+            SVGMobject("PiCreature/PiCreatures_plain_teacher.svg")
+            .to_corner(DOWN + LEFT)
+            .shift(RIGHT)
+        )
+        self.play(FadeIn(pi_student), FadeIn(pi_teacher))
+
+        student_bubble_ask = text_bubble_ask(
+            "Fenwick Tree works with \n min/max query?"
+        ).next_to(pi_student, UP + LEFT)
+
+        teacher_bubble_speech = text_bubble_speech("No!").next_to(
+            pi_teacher, UP + RIGHT
+        )
+
+        self.play(
+            Write(student_bubble_ask),
+            Transform(
+                pi_student,
+                SVGMobject("PiCreature/PiCreatures_pondering.svg").move_to(pi_student),
+            ),
+        )
+        self.wait()
+
+        self.play(Write(teacher_bubble_speech))
+        self.wait()
+
+        self.play(
+            FadeOut(student_bubble_ask),
+            FadeOut(teacher_bubble_speech),
+            FadeOut(pi_student),
+            FadeOut(pi_teacher),
+        )
+        self.wait()
 
 
 def highlight_line_code(code: Code, line) -> Rectangle:
@@ -423,3 +526,25 @@ def highlight_line_code(code: Code, line) -> Rectangle:
         .align_to(code, LEFT)
     )
     return surround_line
+
+
+def text_bubble_speech(text) -> VGroup:
+    bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg")
+    text = (
+        Paragraph(text, alignment="center")
+        .move_to(bubble_speech)
+        .shift(UP * 0.25)
+        .scale(0.35)
+    )
+    return VGroup(bubble_speech, text)
+
+
+def text_bubble_ask(text) -> VGroup:
+    bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg").flip(UP)
+    text = (
+        Paragraph(text, alignment="center")
+        .move_to(bubble_speech)
+        .shift(UP * 0.25)
+        .scale(0.3)
+    )
+    return VGroup(bubble_speech, text)

@@ -1,41 +1,34 @@
 from manim import *
 
 
-class AnimatingMethods(Scene):
+class Test(MovingCameraScene):
     def construct(self):
-        code1_str = """
-        def add(k, x):
-            a[k] += x
-            while k <= n:
-                tree[k] += x
-                k += k & ~(k - 1)
-            return
-        add(5, 1)
-"""
-        code1 = Code(
-            code=code1_str,
-            language="python",
-            font="Monospace",
-            line_spacing=0.35,
-            insert_line_no=False,
-        ).to_edge(RIGHT)
+        n = 7
+        layer = VGroup(
+            *[
+                VGroup(*[Square(1) for _ in range(pow(2, n - i - 1))]).arrange(
+                    RIGHT, buff=pow(2, i) - 1
+                )
+                for i in range(n)
+            ]
+        ).arrange(UP, buff=1)
 
-        code2_str = """
-        def add(k, x):
-            a[k] += x
-            while k < n+1:
-                tree[k] += x
-                k += k & ~(k - 1)
-            return
-        add(5, 1)
-"""
-        code2 = Code(
-            code=code2_str,
-            language="python",
-            font="FiraCode Nerd Font",
-            line_spacing=0.35,
-            insert_line_no=False,
-        ).to_edge(LEFT)
+        line = VGroup(
+            *[
+                VGroup(
+                    *[
+                        Line(
+                            layer[i][j].get_edge_center(UP),
+                            layer[i + 1][j // 2].get_edge_center(DOWN)
+                            + 0.25 * (LEFT if j % 2 == 0 else RIGHT),
+                        )
+                        for j in range(len(layer[i]))
+                    ]
+                )
+                for i in range(n - 1)
+            ]
+        )
 
-        self.add(code1)
-        self.add(code2)
+        tree = VGroup(layer, line).to_edge(DOWN)
+        self.play(Write(tree, run_time=3), self.camera.frame.animate.scale(10))
+        self.wait(2)
