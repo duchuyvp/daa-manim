@@ -258,12 +258,16 @@ class BinaryIndexedTree(MovingCameraScene):
         watch = (
             VGroup(
                 VGroup(
-                    Text("k: ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
+                    Text("k:  ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
                     Text("7  ", font="FiraCode Nerd Font", color=PINK).scale(0.5),
                 ).arrange(RIGHT, buff=0.1),
                 VGroup(
-                    Text("s: ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
+                    Text("s:  ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
                     Text("0  ", font="FiraCode Nerd Font", color=PINK).scale(0.5),
+                ).arrange(RIGHT, buff=0.1),
+                VGroup(
+                    Text("n:  ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
+                    Text("8  ", font="FiraCode Nerd Font", color=PINK).scale(0.5),
                 ).arrange(RIGHT, buff=0.1),
             )
             .arrange(DOWN, buff=0.2)
@@ -286,6 +290,7 @@ class BinaryIndexedTree(MovingCameraScene):
         k = 7
         s = 0
 
+        self.play(Write(watch[2], run_time=0.2))
         self.play(
             Transform(line_debug, highlight_line_code(sum_code, 1)),
             Write(watch[0], run_time=0.2),
@@ -326,53 +331,86 @@ class BinaryIndexedTree(MovingCameraScene):
                 ),
             )
             self.wait(0.5)
-        # self.play(Transform(line_debug, highlight_line_code(sum_code, 3)))
-        # self.play(
-        #     Transform(line_debug, highlight_line_code(sum_code, 4)),
-        #     Transform(
-        #         watch[1][1],
-        #         Text("11  ", font="FiraCode Nerd Font", color=PINK)
-        #         .scale(0.5)
-        #         .move_to(watch[1][1]),
-        #         run_time=0.2,
-        #     ),
-        #     Indicate(bit_v[5][1]),
-        # )
-        # self.play(
-        #     Transform(line_debug, highlight_line_code(sum_code, 2)),
-        #     Transform(
-        #         watch[0][1],
-        #         Text("4  ", font="FiraCode Nerd Font", color=PINK)
-        #         .scale(0.5)
-        #         .move_to(watch[0][1]),
-        #         run_time=0.2,
-        #     ),
-        # )
-        # self.play(Transform(line_debug, highlight_line_code(sum_code, 3)))
-        # self.play(
-        #     Transform(line_debug, highlight_line_code(sum_code, 4)),
-        #     Transform(
-        #         watch[1][1],
-        #         Text("27  ", font="FiraCode Nerd Font", color=PINK)
-        #         .scale(0.5)
-        #         .move_to(watch[1][1]),
-        #         run_time=0.2,
-        #     ),
-        #     Indicate(bit_v[3][1]),
-        # )
-        # self.play(
-        #     Transform(line_debug, highlight_line_code(sum_code, 2)),
-        #     Transform(
-        #         watch[0][1],
-        #         Text("0  ", font="FiraCode Nerd Font", color=PINK)
-        #         .scale(0.5)
-        #         .move_to(watch[0][1]),
-        #         run_time=0.2,
-        #     ),
-        # )
 
         self.play(Transform(line_debug, highlight_line_code(sum_code, 5)))
         self.wait()
+
+        self.play(
+            FadeOut(line_debug),
+            FadeOut(watch),
+            FadeOut(sum_code),
+        )
+        self.wait()
+
+        u = 3
+
+        self.play(arr_v[u - 1][0].animate.set_fill(YELLOW, opacity=0.4))
+        self.wait()
+
+        self.play(
+            *[bit_v[i][0].animate.set_fill(YELLOW, opacity=0.4) for i in [2, 3, 7]],
+            *[value_v[i].animate.set_fill(YELLOW, opacity=0.4) for i in [2, 3, 7]],
+        )
+        self.wait()
+
+        add_func = """
+        def add(k, x):
+            a[k] += x
+            while k < n+1:
+                tree[k] += x
+                k += k & ~(k - 1)
+            return
+
+        add(5, 1)
+"""
+        add_code = (
+            Code(
+                code=add_func,
+                tab_width=4,
+                background="window",
+                language="C++",
+                font="FiraCode Nerd Font",
+                line_spacing=0.35,
+                insert_line_no=False,
+            )
+            .scale(SCALE)
+            .to_edge(RIGHT, buff=1.5)
+            .shift(DOWN)
+        )
+
+        watch = (
+            VGroup(
+                VGroup(
+                    Text("k:  ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
+                    Text("5  ", font="FiraCode Nerd Font", color=PINK).scale(0.5),
+                ).arrange(RIGHT, buff=0.1),
+                VGroup(
+                    Text("x:  ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
+                    Text("1  ", font="FiraCode Nerd Font", color=PINK).scale(0.5),
+                ).arrange(RIGHT, buff=0.1),
+                VGroup(
+                    Text("n:  ", font="FiraCode Nerd Font", color=GRAY_B).scale(0.5),
+                    Text("8  ", font="FiraCode Nerd Font", color=PINK).scale(0.5),
+                ).arrange(RIGHT, buff=0.1),
+            )
+            .arrange(DOWN, buff=0.2)
+            .next_to(add_code, UP, buff=0.2)
+            .align_to(add_code, LEFT)
+            .shift(RIGHT * 0.5)
+        )
+
+        for text in watch:
+            text[1].align_to(text[0], DOWN)
+
+        self.play(Write(add_code))
+        self.wait()
+
+        line_debug = highlight_line_code(add_code, 7)
+
+        self.play(Create(line_debug))
+        self.wait()
+
+        self.play(Write(watch[2], run_time=0.2))
 
 
 def highlight_line_code(code: Code, line) -> Rectangle:
