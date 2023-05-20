@@ -1997,11 +1997,11 @@ for q in range(1, Q+1):
         self.wait()
         self.next_slide()
 
-        pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_edge(DOWN + LEFT)
-        pi_teacher_speech = text_bubble_speech("Wait...").next_to(pi_teacher, UP + RIGHT, buff=0)
-        self.play(FadeIn(pi_teacher), Write(pi_teacher_speech))
-        self.wait()
-        self.next_slide()
+        # pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_edge(DOWN + LEFT)
+        # pi_teacher_speech = text_bubble_speech("Wait...").next_to(pi_teacher, UP + RIGHT, buff=0)
+        # self.play(FadeIn(pi_teacher), Write(pi_teacher_speech))
+        # self.wait()
+        # self.next_slide()
 
         text = Text("Data structure").scale(1.5)
         self.play(Write(text))
@@ -2276,5 +2276,10 @@ for q in range(1, Q+1):
 
         self.play(*[Transform(_2d_arr_v[i], st_2d[0][i][0][0]) for i in range(len(_2d_arr_v))])
         self.play(Write(tree_2d), self.camera.frame.animate(run_time=2).scale(2.5).move_to(tree_2d))
+        self.wait()
+        self.next_slide()
+
+        text = Text("The end.").scale(1.5)
+        self.play(FadeIn(text))
         self.wait()
         self.next_slide()
