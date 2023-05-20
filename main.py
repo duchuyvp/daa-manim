@@ -21,7 +21,7 @@ class Main(MovingCameraScene, Slide):
         arr_v = VGroup(
             *[
                 VGroup(
-                    Square(side_length=1, color=BLUE),
+                    Square(side_length=1, color=BLUE, stroke_width=2),
                     Text(str(arr[i])),
                 )
                 for i in range(len(arr))
@@ -213,7 +213,7 @@ for q in range(1, Q+1):
             VGroup(
                 *[
                     VGroup(
-                        Square(side_length=1, color=BLUE),
+                        Square(side_length=1, color=BLUE, stroke_width=2),
                         Text(str(prefix_arr[i])),
                     )
                     for i in range(len(prefix_arr))
@@ -345,8 +345,7 @@ for q in range(1, Q+1):
                             Rectangle(
                                 width=x_range[2],
                                 height=y_range[2],
-                                color=BLUE,
-                                stroke_width=2,
+                                color=BLUE, stroke_width=2,
                             )
                             for i in range(x_range[0], x_range[1], x_range[2])
                         ]
@@ -685,7 +684,7 @@ for q in range(1, Q+1):
         arr_v = VGroup(
             *[
                 VGroup(
-                    Square(side_length=1, color=BLUE),
+                    Square(side_length=1, color=BLUE, stroke_width=2),
                     Text(str(arr[i])),
                 )
                 for i in range(1, len(arr))
@@ -706,7 +705,7 @@ for q in range(1, Q+1):
         bit_v = VGroup(
             *[
                 VGroup(
-                    Square(side_length=1, color=BLUE),
+                    Square(side_length=1, color=BLUE, stroke_width=2),
                     Text(str(bit[i])),
                 )
                 for i in range(1, len(arr))
@@ -1169,7 +1168,7 @@ for q in range(1, Q+1):
             *[
                 VGroup(
                     *[
-                        VGroup(Square(side_length=1, color=BLUE), Text(str(arr[i][j])))
+                        VGroup(Square(side_length=1, color=BLUE, stroke_width=2), Text(str(arr[i][j])))
                         for j in range(pow(2, nl - i - 1))
                     ]
                 ).arrange(RIGHT, buff=pow(2, i) - 1)
@@ -1184,7 +1183,7 @@ for q in range(1, Q+1):
                         Line(
                             layer[i][j].get_edge_center(UP),
                             layer[i + 1][j // 2].get_edge_center(DOWN) + 0.25 * (LEFT if j % 2 == 0 else RIGHT),
-                            color=BLUE,
+                            color=BLUE, stroke_width=2,
                         )
                         for j in range(len(layer[i]))
                     ]
@@ -1528,7 +1527,7 @@ for q in range(1, Q+1):
             VGroup(
                 *[
                     VGroup(
-                        Square(side_length=1, color=BLUE),
+                        Square(side_length=1, color=BLUE, stroke_width=2),
                         Text(str(arr[i])),
                     )
                     for i in range(len(arr))
@@ -1543,7 +1542,7 @@ for q in range(1, Q+1):
             VGroup(
                 *[
                     VGroup(
-                        Square(side_length=1, color=BLUE),
+                        Square(side_length=1, color=BLUE, stroke_width=2),
                         Text(str(d_arr[i])),
                     )
                     for i in range(len(d_arr))
@@ -1667,7 +1666,7 @@ for q in range(1, Q+1):
             *[
                 VGroup(
                     *[
-                        VGroup(Square(side_length=1, color=BLUE), Text(str(arr[i][j])))
+                        VGroup(Square(side_length=1, color=BLUE, stroke_width=2), Text(str(arr[i][j])))
                         for j in range(pow(2, nl - i - 1))
                     ]
                 ).arrange(RIGHT, buff=pow(2, i) - 1)
@@ -1682,7 +1681,7 @@ for q in range(1, Q+1):
                         Line(
                             layer[i][j].get_edge_center(UP),
                             layer[i + 1][j // 2].get_edge_center(DOWN) + 0.25 * (LEFT if j % 2 == 0 else RIGHT),
-                            color=BLUE,
+                            color=BLUE, stroke_width=2,
                         )
                         for j in range(len(layer[i]))
                     ]
@@ -2050,22 +2049,22 @@ for q in range(1, Q+1):
         line1 = Line(
             node1.get_critical_point(DOWN + RIGHT) + 0.25 * LEFT,
             node2.get_critical_point(UP + LEFT) + 0.5 * RIGHT,
-            color=BLUE,
+            color=BLUE, stroke_width=2,
         )
         line2 = Line(
             node2.get_critical_point(DOWN + LEFT) + 0.25 * RIGHT,
             node3.get_critical_point(UP + RIGHT) + 0.5 * LEFT,
-            color=BLUE,
+            color=BLUE, stroke_width=2,
         )
         line3 = Line(
             node3.get_critical_point(DOWN + RIGHT) + 0.25 * LEFT,
             node4.get_critical_point(UP + LEFT) + 0.5 * RIGHT,
-            color=BLUE,
+            color=BLUE, stroke_width=2,
         )
         line4 = Line(
             node4.get_critical_point(DOWN + LEFT) + 0.25 * RIGHT,
             node5.get_critical_point(UP + RIGHT) + 0.5 * LEFT,
-            color=BLUE,
+            color=BLUE, stroke_width=2,
         )
 
         tree = (
@@ -2184,7 +2183,7 @@ for q in range(1, Q+1):
                         Line(
                             layer[i][j].get_edge_center(UP),
                             layer[i + 1][j // 2].get_edge_center(DOWN) + 0.25 * (LEFT if j % 2 == 0 else RIGHT),
-                            color=BLUE,
+                            color=BLUE, stroke_width=2,
                         )
                         for j in range(len(layer[i]))
                     ]
@@ -2196,7 +2195,7 @@ for q in range(1, Q+1):
             VGroup(
                 *[
                     VGroup(
-                        Square(side_length=1, color=BLUE),
+                        Square(side_length=1, color=BLUE, stroke_width=2),
                         Text(str(arr[i])),
                     )
                     for i in range(len(arr))
@@ -2222,7 +2221,7 @@ for q in range(1, Q+1):
                     VGroup(
                         *[
                             VGroup(
-                                Square(side_length=1, color=BLUE),
+                                Square(side_length=1, color=BLUE, stroke_width=2),
                                 Text(str(_1d_arr[i])),
                             )
                             for i in range(len(_1d_arr))
@@ -2261,14 +2260,14 @@ for q in range(1, Q+1):
 
         line_2d = VGroup(
             VGroup(
-                Line(st_2d[0][0].get_critical_point(UP), get_semi_down_corner(st_2d[1][0], LEFT), color=BLUE),
-                Line(st_2d[0][1].get_critical_point(UP), get_semi_down_corner(st_2d[1][0], RIGHT), color=BLUE),
-                Line(st_2d[0][2].get_critical_point(UP), get_semi_down_corner(st_2d[1][1], LEFT), color=BLUE),
-                Line(st_2d[0][3].get_critical_point(UP), get_semi_down_corner(st_2d[1][1], RIGHT), color=BLUE),
+                Line(st_2d[0][0].get_critical_point(UP), get_semi_down_corner(st_2d[1][0], LEFT), color=BLUE, stroke_width=2),
+                Line(st_2d[0][1].get_critical_point(UP), get_semi_down_corner(st_2d[1][0], RIGHT), color=BLUE, stroke_width=2),
+                Line(st_2d[0][2].get_critical_point(UP), get_semi_down_corner(st_2d[1][1], LEFT), color=BLUE, stroke_width=2),
+                Line(st_2d[0][3].get_critical_point(UP), get_semi_down_corner(st_2d[1][1], RIGHT), color=BLUE, stroke_width=2),
             ),
             VGroup(
-                Line(st_2d[1][0].get_critical_point(UP), get_semi_down_corner(st_2d[2][0], LEFT), color=BLUE),
-                Line(st_2d[1][1].get_critical_point(UP), get_semi_down_corner(st_2d[2][0], RIGHT), color=BLUE),
+                Line(st_2d[1][0].get_critical_point(UP), get_semi_down_corner(st_2d[2][0], LEFT), color=BLUE, stroke_width=2),
+                Line(st_2d[1][1].get_critical_point(UP), get_semi_down_corner(st_2d[2][0], RIGHT), color=BLUE, stroke_width=2),
             ),
         )
 
@@ -2279,7 +2278,9 @@ for q in range(1, Q+1):
         self.wait()
         self.next_slide()
 
-        text = Text("The end.").scale(1.5)
+        self.play(FadeOut(tree_2d), FadeOut(_2d_arr_v))
+        self.wait()
+        text = Text("The end.").scale(3).move_to(tree_2d)
         self.play(FadeIn(text))
         self.wait()
         self.next_slide()
