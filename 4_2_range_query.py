@@ -190,8 +190,8 @@ class RangeQuery(Scene):
         )
         self.wait()
 
-        s_explain = Tex("Sum of range $\\Rightarrow$").scale(0.6).next_to(layer[3][0][0], LEFT, buff=0.2)
-        z_explain = Tex("$\\Leftarrow$ Propagation value").scale(0.6).next_to(layer[3][0][0], RIGHT, buff=0.2)
+        s_explain = Tex("$s$: Sum of range $\\Rightarrow$").scale(0.6).next_to(layer[3][0][0], LEFT, buff=0.2)
+        z_explain = Tex("$\\Leftarrow$ $z$: Propagation value").scale(0.6).next_to(layer[3][0][0], RIGHT, buff=0.2)
 
         self.play(Write(s_explain), Write(z_explain), run_time=0.5)
         self.wait()
@@ -324,6 +324,8 @@ class RangeQuery(Scene):
         )
         self.wait()
 
+        self.remove_foreground_mobjects(layer, tmp_sq, add)
+
         # endregion
 
         pi_student = SVGMobject("PiCreature/PiCreatures_happy.svg").to_edge(DOWN + LEFT)
@@ -332,6 +334,11 @@ class RangeQuery(Scene):
         self.wait()
 
         self.play(FadeOut(pi_student), FadeOut(tree))
+        self.wait()
+
+        pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_edge(DOWN + LEFT)
+        pi_teacher_speech = text_bubble_speech("Wait...").next_to(pi_teacher, UP + RIGHT, buff=0)
+        self.play(FadeIn(pi_teacher), Write(pi_teacher_speech))
         self.wait()
 
 

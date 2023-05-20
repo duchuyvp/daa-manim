@@ -45,9 +45,9 @@ class StaticArray(Scene):
             MathTex("\\texttt{max}_q(l,r) =", "\\max_{i=l}^{r} a_i").move_to(ORIGIN + 1.5 * DOWN),
         )
         result = VGroup(
-            MathTex("= " + str(sum(arr[l : r + 1]))).set_color(GREEN).next_to(query[0], RIGHT),
-            MathTex("= " + str(min(arr[l : r + 1]))).set_color(GREEN).next_to(query[1], RIGHT),
-            MathTex("= " + str(max(arr[l : r + 1]))).set_color(GREEN).next_to(query[2], RIGHT),
+            MathTex("= " + str(sum(arr[l : r + 1]))).set_color(YELLOW).next_to(query[0], RIGHT),
+            MathTex("= " + str(min(arr[l : r + 1]))).set_color(YELLOW).next_to(query[1], RIGHT),
+            MathTex("= " + str(max(arr[l : r + 1]))).set_color(YELLOW).next_to(query[2], RIGHT),
         )
         queries = (
             VGroup(
@@ -64,7 +64,7 @@ class StaticArray(Scene):
 
         range_arr = (
             MathTex("l = " + str(l) + ", " + "r = " + str(r))
-            .set_color(GREEN)
+            .set_color(YELLOW)
             .next_to(queries, UP)
             .align_to(queries, LEFT)
             .scale(SCALE)
@@ -119,12 +119,12 @@ class StaticArray(Scene):
         ranges = (
             VGroup(
                 MathTex("l_1 = " + str(l) + ", " + "r_1 = " + str(r)),
-                MathTex("l_2 = " + str(l) + ", " + "r_2 = " + str(r)),
-                MathTex("l_3 = " + str(l) + ", " + "r_3 = " + str(r)),
+                MathTex("l_2 = " + str(1) + ", " + "r_2 = " + str(6)),
+                MathTex("l_3 = " + str(2) + ", " + "r_3 = " + str(5)),
                 MathTex("\\vdots"),
-                MathTex("l_q = " + str(l) + ", " + "r_q = " + str(r)),
+                MathTex("l_q = " + "a" + ", " + "r_q = " + "b"),
             )
-            .set_color(GREEN)
+            .set_color(YELLOW)
             .arrange(DOWN, buff=1)
             .to_edge(LEFT)
             .scale(SCALE)
