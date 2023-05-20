@@ -26,17 +26,12 @@ class StaticArray(Scene):
         ).arrange(RIGHT, buff=0)
 
         index_v = VGroup(
-            *[
-                Text(str(i)).scale(0.5).next_to(arr_v[i][1], DOWN)
-                for i in range(len(arr))
-            ]
+            *[Text(str(i), font="FiraCode Nerd Font").scale(0.5).next_to(arr_v[i][1], DOWN) for i in range(len(arr))]
         )
         # endregion array
 
         # region intro
-        arr_vgroup = (
-            VGroup(arr_v, index_v).arrange(DOWN, buff=0.5).scale(SCALE).to_edge(UP)
-        )
+        arr_vgroup = VGroup(arr_v, index_v).arrange(DOWN, buff=0.5).scale(SCALE).to_edge(UP)
         arr_vgroup.to_edge(UP)
         self.play(Write(arr_vgroup))
         self.wait()
@@ -45,24 +40,14 @@ class StaticArray(Scene):
         r = 6
 
         query = VGroup(
-            MathTex("\\texttt{sum}_q(l,r) =", "\\sum_{i=l}^{r} a_i").move_to(
-                ORIGIN + 1.5 * UP
-            ),
+            MathTex("\\texttt{sum}_q(l,r) =", "\\sum_{i=l}^{r} a_i").move_to(ORIGIN + 1.5 * UP),
             MathTex("\\texttt{min}_q(l,r) =", "\\min_{i=l}^{r} a_i").move_to(ORIGIN),
-            MathTex("\\texttt{max}_q(l,r) =", "\\max_{i=l}^{r} a_i").move_to(
-                ORIGIN + 1.5 * DOWN
-            ),
+            MathTex("\\texttt{max}_q(l,r) =", "\\max_{i=l}^{r} a_i").move_to(ORIGIN + 1.5 * DOWN),
         )
         result = VGroup(
-            MathTex("= " + str(sum(arr[l : r + 1])))
-            .set_color(GREEN)
-            .next_to(query[0], RIGHT),
-            MathTex("= " + str(min(arr[l : r + 1])))
-            .set_color(GREEN)
-            .next_to(query[1], RIGHT),
-            MathTex("= " + str(max(arr[l : r + 1])))
-            .set_color(GREEN)
-            .next_to(query[2], RIGHT),
+            MathTex("= " + str(sum(arr[l : r + 1]))).set_color(GREEN).next_to(query[0], RIGHT),
+            MathTex("= " + str(min(arr[l : r + 1]))).set_color(GREEN).next_to(query[1], RIGHT),
+            MathTex("= " + str(max(arr[l : r + 1]))).set_color(GREEN).next_to(query[2], RIGHT),
         )
         queries = (
             VGroup(
@@ -87,10 +72,7 @@ class StaticArray(Scene):
 
         self.play(
             Write(range_arr),
-            *[
-                arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4)
-                for i in range(l, r + 1)
-            ],
+            *[arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4) for i in range(l, r + 1)],
         )
         self.wait()
 
@@ -178,17 +160,8 @@ for q in range(1, Q+1):
             )
         )
 
-        pi_teacher = (
-            SVGMobject("PiCreature/PiCreatures_teacher.svg")
-            .scale(0.75)
-            .to_edge(DOWN)
-            .shift(LEFT * 3)
-        )
-        bubble_speech = (
-            text_bubble_speech("O(nq) time?")
-            .scale(0.75)
-            .next_to(pi_teacher, UP + RIGHT, buff=0)
-        )
+        pi_teacher = SVGMobject("PiCreature/PiCreatures_teacher.svg").scale(0.75).to_edge(DOWN).shift(LEFT * 3)
+        bubble_speech = text_bubble_speech("O(nq) time?").scale(0.75).next_to(pi_teacher, UP + RIGHT, buff=0)
 
         self.play(FadeIn(pi_teacher))
         self.play(Write(bubble_speech))
@@ -294,10 +267,7 @@ for q in range(1, Q+1):
         self.play(
             # ReplacementTransform(formula, formula_),
             *[Transform(formula[i], formula_[i]) for i in range(len(formula))],
-            *[
-                arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4)
-                for i in range(l, r + 1)
-            ],
+            *[arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4) for i in range(l, r + 1)],
         )
         self.wait()
 
@@ -308,10 +278,7 @@ for q in range(1, Q+1):
         self.wait()
 
         self.play(
-            *[
-                Transform(formula[i], formula__[j])
-                for i, j in zip([0, 1, 2, 3, 4, 8], [0, 1, 2, 3, 4, 6])
-            ],
+            *[Transform(formula[i], formula__[j]) for i, j in zip([0, 1, 2, 3, 4, 8], [0, 1, 2, 3, 4, 6])],
             *[
                 Transform(VGroup(*[formula[i] for i in l]), formula__[j])
                 for l, j in zip([[5, 6, 7], [9, 10, 11]], [5, 7])
@@ -321,14 +288,10 @@ for q in range(1, Q+1):
 
         self.play(FadeOut(formula))
 
-        pi_teacher = SVGMobject("PiCreature/PiCreatures_happy_teacher.svg").to_corner(
-            DOWN + LEFT
-        )
+        pi_teacher = SVGMobject("PiCreature/PiCreatures_happy_teacher.svg").to_corner(DOWN + LEFT)
 
         teacher_speech_bubble = (
-            text_bubble_speech("Query in O(1) time")
-            .scale(SCALE)
-            .next_to(pi_teacher, UP + RIGHT, buff=0)
+            text_bubble_speech("Query in O(1) time").scale(SCALE).next_to(pi_teacher, UP + RIGHT, buff=0)
         )
 
         self.play(FadeIn(pi_teacher))
@@ -344,13 +307,9 @@ for q in range(1, Q+1):
             FadeOut(index_v),
         )
 
-        pi_teacher_speak = SVGMobject(
-            "PiCreature/PiCreatures_speaking_teacher.svg"
-        ).to_corner(DOWN + LEFT)
+        pi_teacher_speak = SVGMobject("PiCreature/PiCreatures_speaking_teacher.svg").to_corner(DOWN + LEFT)
         teacher_speak_bubble = (
-            text_bubble_speech("Work in \n 2-D array")
-            .scale(SCALE)
-            .next_to(pi_teacher_speak, UP + RIGHT, buff=0)
+            text_bubble_speech("Work in \n 2-D array").scale(SCALE).next_to(pi_teacher_speak, UP + RIGHT, buff=0)
         )
 
         x_range = [0, 10, 1]
@@ -412,9 +371,7 @@ for q in range(1, Q+1):
             ),
         )
 
-        query_rect = SurroundingRectangle(
-            VGroup(grid_2d_arr[2][3], grid_2d_arr[4][6]), buff=0, color=RED
-        )
+        query_rect = SurroundingRectangle(VGroup(grid_2d_arr[2][3], grid_2d_arr[4][6]), buff=0, color=RED)
 
         # _2d_arr = VGroup(grid_2d_arr, label_2d_arr).scale(SCALE).to_corner(UP + RIGHT)
 
@@ -433,9 +390,7 @@ for q in range(1, Q+1):
 
         self.play(Create(query_rect), Write(label_2d_arr), FadeOut(rec_label))
 
-        formula_2d = MathTex("  S(A)", " -S(B)", " +S(D)", " -S(C)").next_to(
-            grid_2d_arr, DOWN, buff=1
-        )
+        formula_2d = MathTex("  S(A)", " -S(B)", " +S(D)", " -S(C)").next_to(grid_2d_arr, DOWN, buff=1)
         self.play(Write(formula_2d))
         self.wait()
 
@@ -478,9 +433,9 @@ for q in range(1, Q+1):
             .to_corner(DOWN + LEFT)
         )
 
-        student_ask_bubble = text_bubble_speech(
-            ' "prefix sum" \n for min query?'
-        ).next_to(pi_student_confuse, UP + RIGHT, buff=0)
+        student_ask_bubble = text_bubble_speech(' "prefix sum" \n for min query?').next_to(
+            pi_student_confuse, UP + RIGHT, buff=0
+        )
 
         self.play(Transform(pi_student, pi_student_confuse), Write(student_ask_bubble))
         self.wait()
@@ -501,9 +456,7 @@ for q in range(1, Q+1):
         w = 2
         while w <= len(arr):
             for i in range(len(arr) - w + 1):
-                d[(i, i + w - 1)] = min(
-                    d[(i, i + w / 2 - 1)], d[(i + w / 2, i + w - 1)]
-                )
+                d[(i, i + w - 1)] = min(d[(i, i + w / 2 - 1)], d[(i + w / 2, i + w - 1)])
             w *= 2
 
         sparse_table = VGroup()
@@ -512,10 +465,7 @@ for q in range(1, Q+1):
             temp = MathTable(
                 [
                     ["l", "r", "\\texttt{min}_q(l,r)"],
-                    *[
-                        [str(i), str(i + w - 1), str(d[(i, i + w - 1)])]
-                        for i in range(len(arr) - w + 1)
-                    ],
+                    *[[str(i), str(i + w - 1), str(d[(i, i + w - 1)])] for i in range(len(arr) - w + 1)],
                 ],
                 line_config={"stroke_width": 1, "color": YELLOW},
             )
@@ -614,22 +564,12 @@ for q in range(1, Q+1):
         self.play(Write(formular_min))
         self.wait()
 
-        formular_min_l_rect = SurroundingRectangle(
-            sparse_table[2].get_rows()[2], color=RED, buff=0.2
-        )
-        formular_min_r_rect = SurroundingRectangle(
-            sparse_table[2].get_rows()[4], color=RED, buff=0.2
-        )
+        formular_min_l_rect = SurroundingRectangle(sparse_table[2].get_rows()[2], color=RED, buff=0.2)
+        formular_min_r_rect = SurroundingRectangle(sparse_table[2].get_rows()[4], color=RED, buff=0.2)
 
         self.play(
-            *[
-                Transform(formular_min[i], formular_min_[i])
-                for i in range(len(formular_min))
-            ],
-            *[
-                arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4)
-                for i in range(l_m, r_m + 1)
-            ],
+            *[Transform(formular_min[i], formular_min_[i]) for i in range(len(formular_min))],
+            *[arr_v[i][0].animate.set_fill(YELLOW, opacity=0.4) for i in range(l_m, r_m + 1)],
             Create(formular_min_l_rect),
             Create(formular_min_r_rect),
         )
@@ -644,17 +584,13 @@ for q in range(1, Q+1):
                 Transform(VGroup(*[formular_min[i] for i in l]), formular_min__[j])
                 for l, j in zip([[6, 7, 8, 9, 10], [12, 13, 14, 15, 16]], [6, 8])
             ],
-
         )
         self.wait()
 
         self.play(
             FadeOut(formular_min_l_rect),
             FadeOut(formular_min_r_rect),
-            *[
-                arr_v[i][0].animate.set_fill(YELLOW, opacity=0)
-                for i in range(l_m, r_m + 1)
-            ],
+            *[arr_v[i][0].animate.set_fill(YELLOW, opacity=0) for i in range(l_m, r_m + 1)],
             FadeOut(formular_min),
             FadeOut(sparse_table),
         )
@@ -663,12 +599,8 @@ for q in range(1, Q+1):
 
         # region Binary indexed tree
 
-        pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_corner(
-            DOWN + LEFT
-        )
-        pi_bubble_ask = text_bubble_speech("What if we update \n an element?").next_to(
-            pi_teacher, UP + RIGHT, buff=0
-        )
+        pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_corner(DOWN + LEFT)
+        pi_bubble_ask = text_bubble_speech("What if we update \n an element?").next_to(pi_teacher, UP + RIGHT, buff=0)
 
         self.play(FadeIn(pi_teacher), Write(pi_bubble_ask))
         self.play(FadeIn(prefix_arr_v))
@@ -678,20 +610,12 @@ for q in range(1, Q+1):
         self.wait()
 
         self.play(arr_v[u][0].animate.set_fill(YELLOW, opacity=0.4))
-        self.play(
-            *[
-                prefix_arr_v[i][0].animate.set_fill(RED, opacity=0.4)
-                for i in range(u, len(prefix_arr_v))
-            ]
-        )
+        self.play(*[prefix_arr_v[i][0].animate.set_fill(RED, opacity=0.4) for i in range(u, len(prefix_arr_v))])
         self.wait()
 
         self.play(
             arr_v[u][0].animate.set_fill(YELLOW, opacity=0),
-            *[
-                prefix_arr_v[i][0].animate.set_fill(RED, opacity=0)
-                for i in range(u, len(prefix_arr_v))
-            ],
+            *[prefix_arr_v[i][0].animate.set_fill(RED, opacity=0) for i in range(u, len(prefix_arr_v))],
             FadeOut(pi_teacher),
             FadeOut(pi_bubble_ask),
             FadeOut(prefix_arr_v),
@@ -704,21 +628,11 @@ for q in range(1, Q+1):
 
 def text_bubble_speech(text) -> VGroup:
     bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg")
-    text = (
-        Paragraph(text, alignment="center")
-        .move_to(bubble_speech)
-        .shift(UP * 0.25)
-        .scale(0.35)
-    )
+    text = Paragraph(text, alignment="center").move_to(bubble_speech).shift(UP * 0.25).scale(0.35)
     return VGroup(bubble_speech, text)
 
 
 def text_bubble_ask(text) -> VGroup:
     bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg").flip(UP)
-    text = (
-        Paragraph(text, alignment="center")
-        .move_to(bubble_speech)
-        .shift(UP * 0.25)
-        .scale(0.35)
-    )
+    text = Paragraph(text, alignment="center").move_to(bubble_speech).shift(UP * 0.25).scale(0.35)
     return VGroup(bubble_speech, text)

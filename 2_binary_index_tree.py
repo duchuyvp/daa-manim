@@ -35,14 +35,12 @@ class BinaryIndexedTree(MovingCameraScene):
 
         index_arr_v = VGroup(
             *[
-                Text(str(i)).scale(0.5).next_to(arr_v[i - 1][1], DOWN)
+                Text(str(i), font="FiraCode Nerd Font").scale(0.5).next_to(arr_v[i - 1][1], DOWN)
                 for i in range(1, len(arr))
             ]
         )
 
-        arr_vgroup = (
-            VGroup(arr_v, index_arr_v).arrange(DOWN, buff=0.5).scale(SCALE).to_edge(UP)
-        )
+        arr_vgroup = VGroup(arr_v, index_arr_v).arrange(DOWN, buff=0.5).scale(SCALE).to_edge(UP)
         arr_vgroup.to_edge(UP)
         self.play(Write(arr_vgroup))
 
@@ -56,12 +54,7 @@ class BinaryIndexedTree(MovingCameraScene):
             ]
         ).arrange(DOWN, buff=0)
 
-        index_bit_v = VGroup(
-            *[
-                Text(str(i)).scale(0.5).next_to(bit_v[i - 1][1], LEFT)
-                for i in range(1, len(arr))
-            ]
-        )
+        index_bit_v = VGroup(*[Text(str(i)).scale(0.5).next_to(bit_v[i - 1][1], LEFT) for i in range(1, len(arr))])
 
         bit_vgroup = (
             VGroup(bit_v, index_bit_v)
@@ -75,9 +68,7 @@ class BinaryIndexedTree(MovingCameraScene):
         bit_vgroup.add(bit_label)
         self.play(Write(bit_label))
 
-        self.play(
-            *[Create(bit_v[i][0]) for i in range(len(bit_v))], Create(index_bit_v)
-        )
+        self.play(*[Create(bit_v[i][0]) for i in range(len(bit_v))], Create(index_bit_v))
         self.wait()
 
         origin = ORIGIN + DOWN * 2 + RIGHT * 2
@@ -91,9 +82,7 @@ class BinaryIndexedTree(MovingCameraScene):
             MathTex("\ 100_2"),
             MathTex("\ \ 10_2"),
         ).arrange(DOWN, buff=0.2)
-        line = Line(ORIGIN, RIGHT * ex_pk[0].get_width()).next_to(
-            ex_pk[0], DOWN, buff=0.1
-        )
+        line = Line(ORIGIN, RIGHT * ex_pk[0].get_width()).next_to(ex_pk[0], DOWN, buff=0.1)
         for i in range(1, len(ex_pk)):
             ex_pk[i].align_to(ex_pk[0], RIGHT)
         ex_pk_v = VGroup(ex_pk, line).move_to(origin)
@@ -102,9 +91,7 @@ class BinaryIndexedTree(MovingCameraScene):
         self.wait()
 
         text_pk = MathTex("\ p(k) = 2").next_to(ex_pk[-1], RIGHT, buff=0.5)
-        self.play(
-            *[FadeIn(ex_pk[i], target_position=ex_pk[0]) for i in range(1, len(ex_pk))]
-        )
+        self.play(*[FadeIn(ex_pk[i], target_position=ex_pk[0]) for i in range(1, len(ex_pk))])
         self.wait()
 
         self.play(Write(text_pk))
@@ -114,9 +101,7 @@ class BinaryIndexedTree(MovingCameraScene):
         self.wait()
 
         self.play(Restore(self.camera.frame))
-        formula_tree = MathTex(
-            "tree[k] = ", "\\texttt{sum}_q(", "k-p(k)+1", ",", "k", ")"
-        )
+        formula_tree = MathTex("tree[k] = ", "\\texttt{sum}_q(", "k-p(k)+1", ",", "k", ")")
         self.play(Write(formula_tree))
         self.wait()
 
@@ -142,12 +127,7 @@ class BinaryIndexedTree(MovingCameraScene):
         self.play(Create(value_v))
         self.wait()
 
-        self.play(
-            *[
-                ReplacementTransform(value_v[i].copy(), bit_v[i][1])
-                for i in range(len(value_v))
-            ]
-        )
+        self.play(*[ReplacementTransform(value_v[i].copy(), bit_v[i][1]) for i in range(len(value_v))])
         self.wait()
 
         self.play(
@@ -207,20 +187,10 @@ class BinaryIndexedTree(MovingCameraScene):
         )
         self.wait()
 
-        self.play(
-            *[
-                Transform(formula_sum[i], formula_sum_[i])
-                for i in range(len(formula_sum))
-            ]
-        )
+        self.play(*[Transform(formula_sum[i], formula_sum_[i]) for i in range(len(formula_sum))])
         self.wait()
 
-        self.play(
-            *[
-                Transform(formula_sum[i], formula_sum__[i])
-                for i in range(len(formula_sum))
-            ]
-        )
+        self.play(*[Transform(formula_sum[i], formula_sum__[i]) for i in range(len(formula_sum))])
         self.wait()
 
         self.play(
@@ -310,9 +280,7 @@ class BinaryIndexedTree(MovingCameraScene):
                 Transform(line_debug, highlight_line_code(sum_code, 4)),
                 Transform(
                     watch[1][1],
-                    Text(str(s) + "  ", font="FiraCode Nerd Font", color=PINK)
-                    .scale(0.5)
-                    .move_to(watch[1][1]),
+                    Text(str(s) + "  ", font="FiraCode Nerd Font", color=PINK).scale(0.5).move_to(watch[1][1]),
                     run_time=0.2,
                 ),
                 Indicate(bit_v[k - 1][1]),
@@ -324,9 +292,7 @@ class BinaryIndexedTree(MovingCameraScene):
                 Transform(line_debug, highlight_line_code(sum_code, 2)),
                 Transform(
                     watch[0][1],
-                    Text(str(k) + "  ", font="FiraCode Nerd Font", color=PINK)
-                    .scale(0.5)
-                    .move_to(watch[0][1]),
+                    Text(str(k) + "  ", font="FiraCode Nerd Font", color=PINK).scale(0.5).move_to(watch[0][1]),
                     run_time=0.2,
                 ),
             )
@@ -459,9 +425,7 @@ class BinaryIndexedTree(MovingCameraScene):
                 Transform(line_debug, highlight_line_code(add_code, 2)),
                 Transform(
                     watch[0][1],
-                    Text(str(k) + "  ", font="FiraCode Nerd Font", color=PINK)
-                    .scale(0.5)
-                    .move_to(watch[0][1]),
+                    Text(str(k) + "  ", font="FiraCode Nerd Font", color=PINK).scale(0.5).move_to(watch[0][1]),
                     run_time=0.2,
                 ),
             )
@@ -475,25 +439,13 @@ class BinaryIndexedTree(MovingCameraScene):
             *[FadeOut(i) for i in [add_code, arr_vgroup, bit_vgroup, value_v]],
         )
 
-        pi_student = (
-            SVGMobject("PiCreature/PiCreatures_hesitant.svg")
-            .to_corner(DOWN + RIGHT)
-            .shift(LEFT)
-        )
-        pi_teacher = (
-            SVGMobject("PiCreature/PiCreatures_plain_teacher.svg")
-            .to_corner(DOWN + LEFT)
-            .shift(RIGHT)
-        )
+        pi_student = SVGMobject("PiCreature/PiCreatures_hesitant.svg").to_corner(DOWN + RIGHT).shift(LEFT)
+        pi_teacher = SVGMobject("PiCreature/PiCreatures_plain_teacher.svg").to_corner(DOWN + LEFT).shift(RIGHT)
         self.play(FadeIn(pi_student), FadeIn(pi_teacher))
 
-        student_bubble_ask = text_bubble_ask(
-            "Fenwick Tree works with \n min/max query?"
-        ).next_to(pi_student, UP + LEFT)
+        student_bubble_ask = text_bubble_ask("Fenwick Tree works with \n min/max query?").next_to(pi_student, UP + LEFT)
 
-        teacher_bubble_speech = text_bubble_speech("No!").next_to(
-            pi_teacher, UP + RIGHT
-        )
+        teacher_bubble_speech = text_bubble_speech("No!").next_to(pi_teacher, UP + RIGHT)
 
         self.play(
             Write(student_bubble_ask),
@@ -530,21 +482,11 @@ def highlight_line_code(code: Code, line) -> Rectangle:
 
 def text_bubble_speech(text) -> VGroup:
     bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg")
-    text = (
-        Paragraph(text, alignment="center")
-        .move_to(bubble_speech)
-        .shift(UP * 0.25)
-        .scale(0.35)
-    )
+    text = Paragraph(text, alignment="center").move_to(bubble_speech).shift(UP * 0.25).scale(0.35)
     return VGroup(bubble_speech, text)
 
 
 def text_bubble_ask(text) -> VGroup:
     bubble_speech = SVGMobject("PiCreature/Bubbles_speech.svg").flip(UP)
-    text = (
-        Paragraph(text, alignment="center")
-        .move_to(bubble_speech)
-        .shift(UP * 0.25)
-        .scale(0.3)
-    )
+    text = Paragraph(text, alignment="center").move_to(bubble_speech).shift(UP * 0.25).scale(0.3)
     return VGroup(bubble_speech, text)

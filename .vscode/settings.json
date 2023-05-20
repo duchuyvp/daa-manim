@@ -1,4 +1,9 @@
 {
 	"editor.formatOnSave": true,
 	"python.formatting.provider": "black",
+	"python.formatting.blackArgs": [
+		"--line-length",
+		"120"
+	],
+	"svg.preview.background": "transparent",
 }
